@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { BannersModule } from './banners/banners.module';
+import { SeedService } from './bootstrap/seed.service';
 import { CartonesModule } from './cartones/cartones.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { GruposModule } from './grupos/grupos.module';
@@ -31,5 +32,6 @@ import { UsersModule } from './users/users.module';
     AdminModule,
   ],
   controllers: [HealthController],
+  providers: [SeedService],
 })
 export class AppModule {}
