@@ -21,7 +21,7 @@ import { unlink, writeFile } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 import { renombrarBannerSchema } from '@bingo/common';
 import { ZodPipe } from '../common/zod.pipe';
-import { AdminOnly } from '../auth/decorators';
+import { AdminOnly, Public } from '../auth/decorators';
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -90,6 +90,8 @@ export class BannersController {
     return { mensaje: 'Banner eliminado (los cartones ya generados no cambian)' };
   }
 
+  /** Pública para poder usar <img src> directo en la PWA (igual que la imagen de cartón). */
+  @Public()
   @Get(':id/imagen')
   async imagen(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     const banner = await this.prisma.banner.findUnique({ where: { id } });
