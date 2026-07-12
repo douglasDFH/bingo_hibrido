@@ -7,6 +7,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import { useAuth } from './stores/auth.store';
+import { InstallPrompt } from './components/InstallPrompt';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Cartones from './pages/Cartones';
@@ -42,6 +43,7 @@ function RutaPermiso({ permiso }: { permiso: Parameters<ReturnType<typeof useAut
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <InstallPrompt />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />

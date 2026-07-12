@@ -9,6 +9,9 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Registra el service worker también en `pnpm dev`, para poder probar el
+      // prompt de instalación en localhost (por defecto solo se activa en build).
+      devOptions: { enabled: true },
       manifest: {
         name: 'Bingo Imperial',
         short_name: 'Bingo',
