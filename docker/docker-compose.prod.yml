@@ -28,7 +28,9 @@ services:
 
   api:
     build:
-      context: ..
+      # Rutas relativas a la raíz del repo: Coolify ejecuta el build con
+      # project-directory = raíz del repo (no la carpeta docker/).
+      context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
@@ -48,7 +50,7 @@ services:
 
   worker:
     build:
-      context: ../worker
+      context: worker
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-bingo}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-bingo}
@@ -64,7 +66,7 @@ services:
 
   frontend:
     build:
-      context: ..
+      context: .
       dockerfile: frontend/Dockerfile
     restart: unless-stopped
     # Coolify enruta el dominio público a este puerto
