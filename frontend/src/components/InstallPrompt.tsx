@@ -12,9 +12,6 @@ declare global {
   }
 }
 
-// TEMPORAL: panel de diagnóstico en pantalla. Se quita cuando resolvamos.
-const DEBUG = true;
-
 // Guardamos un "snooze" (no volver a mostrar hasta cierta fecha) en vez de un
 // descarte permanente, para que el banner reaparezca si el usuario no instaló.
 const SNOOZE_KEY = 'pwa_install_snooze';
@@ -46,45 +43,45 @@ function esNavegadorEmbebido() {
 
 type Modo = 'instalar' | 'manual' | 'ios' | 'chrome';
 
+/**
+ * Banner de instalación de la PWA en el celular.
+ * - Chrome con evento nativo → botón "Instalar" (un toque instala).
+ * - Chrome sin evento (algunos equipos) → instrucción "⋮ → Instalar aplicación".
+ * - Navegador de WhatsApp/redes → botón "Abrir en Chrome".
+ * - iPhone/Safari → "Compartir → Agregar a inicio".
+ */
 export function InstallPrompt() {
   const [modo, setModo] = useState<Modo | null>(null);
-  const [bipFired, setBipFired] = useState<boolean>(!!window.__deferredInstallPrompt);
 
   useEffect(() => {
-    const marcarBip = () => setBipFired(true);
-    window.addEventListener('pwa-installable', marcarBip);
-
-    if (esStandalone() || snoozeActivo()) {
-      return () => window.removeEventListener('pwa-installable', marcarBip);
-    }
+    if (esStandalone() || snoozeActivo()) return;
 
     let timer: ReturnType<typeof setTimeout>;
 
     if (esNavegadorEmbebido()) {
       timer = setTimeout(() => setModo('chrome'), 1500);
-    } else if (esIOS()) {
-      timer = setTimeout(() => setModo('ios'), 1500);
-    } else {
-      // Android/desktop: si el evento ya está (o llega), botón nativo; si no,
-      // igual mostramos el banner con instrucciones manuales.
-      const upgrade = () => setModo('instalar');
-      window.addEventListener('pwa-installable', upgrade);
-      timer = setTimeout(() => {
-        setModo(window.__deferredInstallPrompt ? 'instalar' : 'manual');
-      }, 2000);
-      const instalado = () => setModo(null);
-      window.addEventListener('pwa-installed', instalado);
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener('pwa-installable', marcarBip);
-        window.removeEventListener('pwa-installable', upgrade);
-        window.removeEventListener('pwa-installed', instalado);
-      };
+      return () => clearTimeout(timer);
     }
+
+    if (esIOS()) {
+      timer = setTimeout(() => setModo('ios'), 1500);
+      return () => clearTimeout(timer);
+    }
+
+    // Android/desktop: si el evento está (o llega), botón nativo; si no,
+    // igual mostramos el banner con la instrucción manual.
+    const upgrade = () => setModo('instalar');
+    window.addEventListener('pwa-installable', upgrade);
+    timer = setTimeout(() => {
+      setModo(window.__deferredInstallPrompt ? 'instalar' : 'manual');
+    }, 2000);
+    const instalado = () => setModo(null);
+    window.addEventListener('pwa-installed', instalado);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('pwa-installable', marcarBip);
+      window.removeEventListener('pwa-installable', upgrade);
+      window.removeEventListener('pwa-installed', instalado);
     };
   }, []);
 
@@ -111,72 +108,72 @@ export function InstallPrompt() {
     window.location.href.replace(/^https?:\/\//, '') +
     '#Intent;scheme=https;package=com.android.chrome;end';
 
-  const debug = DEBUG ? (
-    <div className="fixed inset-x-0 top-0 z-[60] bg-black/85 px-2 py-1 text-[11px] leading-tight text-lime-300">
-      <div>standalone: {String(esStandalone())} · bip: {String(bipFired)} · snoozed: {String(snoozeActivo())}</div>
-      <div>ios: {String(esIOS())} · embebido: {String(esNavegadorEmbebido())} · modo: {String(modo)}</div>
-      <div className="truncate text-gray-400">{navigator.userAgent}</div>
-    </div>
-  ) : null;
+  if (!modo) return null;
 
   const textos: Record<Modo, string> = {
     instalar: 'Úsala como una app en tu celular, sin abrir el navegador.',
-    manual: 'Abre el menú ⋮ de Chrome y toca “Instalar aplicación”.',
+    manual: 'Toca el menú ⋮ (arriba a la derecha) y elige “Instalar aplicación”.',
     ios: 'Toca Compartir y luego “Agregar a inicio” para usarla como app.',
     chrome: 'Para instalar la app, ábrela en Chrome.',
   };
 
   return (
-    <>
-      {debug}
-      {modo && (
-        <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-3">
-          <div className="w-full max-w-md rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-black/10">
-            <div className="flex items-start gap-3">
-              <img src="/icons/icon-192.png" alt="" className="h-11 w-11 shrink-0 rounded-xl" />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-gray-900">Instalar Bingo Imperial</p>
-                <p className="mt-0.5 text-xs text-gray-500">{textos[modo]}</p>
-              </div>
-              <button
-                onClick={cerrar}
-                aria-label="Cerrar"
-                className="-mr-1 -mt-1 rounded-full p-1 text-xl leading-none text-gray-400 active:bg-gray-100"
-              >
-                ×
-              </button>
-            </div>
-
-            {(modo === 'instalar' || modo === 'manual') && (
-              <div className="mt-3 flex justify-end gap-2">
-                <button
-                  onClick={cerrar}
-                  className="rounded-xl px-4 py-2 text-sm font-semibold text-gray-600 active:bg-gray-100"
-                >
-                  Ahora no
-                </button>
-                <button
-                  onClick={instalar}
-                  className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
-                >
-                  Instalar
-                </button>
-              </div>
-            )}
-
-            {modo === 'chrome' && (
-              <div className="mt-3 flex justify-end">
-                <a
-                  href={intentChrome}
-                  className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
-                >
-                  Abrir en Chrome
-                </a>
-              </div>
-            )}
+    <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-3">
+      <div className="w-full max-w-md rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-black/10">
+        <div className="flex items-start gap-3">
+          <img src="/icons/icon-192.png" alt="" className="h-11 w-11 shrink-0 rounded-xl" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-gray-900">Instalar Bingo Imperial</p>
+            <p className="mt-0.5 text-xs text-gray-500">{textos[modo]}</p>
           </div>
+          <button
+            onClick={cerrar}
+            aria-label="Cerrar"
+            className="-mr-1 -mt-1 rounded-full p-1 text-xl leading-none text-gray-400 active:bg-gray-100"
+          >
+            ×
+          </button>
         </div>
-      )}
-    </>
+
+        {modo === 'instalar' && (
+          <div className="mt-3 flex justify-end gap-2">
+            <button
+              onClick={cerrar}
+              className="rounded-xl px-4 py-2 text-sm font-semibold text-gray-600 active:bg-gray-100"
+            >
+              Ahora no
+            </button>
+            <button
+              onClick={instalar}
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+            >
+              Instalar
+            </button>
+          </div>
+        )}
+
+        {(modo === 'manual' || modo === 'ios') && (
+          <div className="mt-3 flex justify-end">
+            <button
+              onClick={cerrar}
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+            >
+              Entendido
+            </button>
+          </div>
+        )}
+
+        {modo === 'chrome' && (
+          <div className="mt-3 flex justify-end">
+            <a
+              href={intentChrome}
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+            >
+              Abrir en Chrome
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
