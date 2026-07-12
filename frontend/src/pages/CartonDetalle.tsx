@@ -92,7 +92,7 @@ export default function CartonDetalle() {
 
   return (
     <Pantalla titulo={`Cartón #${carton.numero}`}>
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm shadow-black/20">
         <img
           src={`/api/cartones/${carton.id}/imagen?v=${carton.estado}`}
           alt={`Cartón ${carton.numero}`}
@@ -100,31 +100,31 @@ export default function CartonDetalle() {
         />
       </div>
 
-      <div className="mt-4 rounded-2xl bg-white p-4 shadow-sm">
+      <div className="mt-4 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xl font-bold">#{carton.numero}</span>
+          <span className="text-xl font-bold text-white">#{carton.numero}</span>
           <EstadoChip estado={carton.estado} />
         </div>
         {carton.comprador && (
-          <dl className="space-y-1 text-sm text-gray-700">
-            <div className="flex justify-between"><dt className="text-gray-400">Comprador</dt><dd className="font-medium">{carton.comprador}</dd></div>
+          <dl className="space-y-1 text-sm text-white/90">
+            <div className="flex justify-between"><dt className="text-muted">Comprador</dt><dd className="font-medium">{carton.comprador}</dd></div>
             {carton.telefono_comprador && (
-              <div className="flex justify-between"><dt className="text-gray-400">Teléfono</dt><dd>{carton.telefono_comprador}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Teléfono</dt><dd>{carton.telefono_comprador}</dd></div>
             )}
             {carton.precio != null && (
-              <div className="flex justify-between"><dt className="text-gray-400">Precio</dt><dd className="font-semibold text-brand">{dinero(carton.precio)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Precio</dt><dd className="font-semibold text-brand">{dinero(carton.precio)}</dd></div>
             )}
             {carton.fecha_venta && (
-              <div className="flex justify-between"><dt className="text-gray-400">Fecha</dt><dd>{fechaHora(carton.fecha_venta)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Fecha</dt><dd>{fechaHora(carton.fecha_venta)}</dd></div>
             )}
             {carton.notas && (
-              <div><dt className="text-gray-400">Notas</dt><dd>{carton.notas}</dd></div>
+              <div><dt className="text-muted">Notas</dt><dd>{carton.notas}</dd></div>
             )}
           </dl>
         )}
       </div>
 
-      {error && <p className="mt-3 text-sm font-medium text-[#EF4444]">{error}</p>}
+      {error && <p className="mt-3 text-sm font-medium text-bad">{error}</p>}
 
       <div className="mt-4 grid grid-cols-2 gap-2.5">
         {(esDisponible || esReservado) && tienePermiso('vender') && (
@@ -158,14 +158,14 @@ export default function CartonDetalle() {
         cargando={accion.isPending}
       />
       <Dialogo abierto={dialogo === 'liberar'} titulo="¿Liberar este cartón?" onCerrar={() => setDialogo(null)}>
-        <p className="mb-4 text-sm text-gray-600">Volverá a estar disponible y se borrarán los datos del comprador.</p>
+        <p className="mb-4 text-sm text-muted">Volverá a estar disponible y se borrarán los datos del comprador.</p>
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setDialogo(null)}>Cancelar</Boton>
           <Boton className="flex-1" disabled={accion.isPending} onClick={() => accion.mutate({ ruta: 'liberar' })}>Liberar</Boton>
         </div>
       </Dialogo>
       <Dialogo abierto={dialogo === 'eliminar'} titulo="¿Eliminar este cartón?" onCerrar={() => setDialogo(null)}>
-        <p className="mb-4 text-sm text-gray-600">Se borra el cartón y su imagen. No se puede deshacer.</p>
+        <p className="mb-4 text-sm text-muted">Se borra el cartón y su imagen. No se puede deshacer.</p>
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setDialogo(null)}>Cancelar</Boton>
           <Boton variante="peligro" className="flex-1" disabled={eliminar.isPending} onClick={() => eliminar.mutate()}>Eliminar</Boton>
@@ -217,7 +217,7 @@ function DialogoVender({ abierto, carton, onCerrar, onConfirmar, cargando }: {
         <Campo label="Notas">
           <textarea className={inputCls} rows={2} value={notas} onChange={(e) => setNotas(e.target.value)} />
         </Campo>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={onCerrar}>Cancelar</Boton>
           <Boton type="submit" variante="verde" className="flex-1" disabled={cargando}>Vender</Boton>

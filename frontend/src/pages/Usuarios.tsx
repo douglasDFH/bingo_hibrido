@@ -49,27 +49,27 @@ export default function Usuarios() {
       ) : (
         <div className="space-y-2.5">
           {usuarios.map((u) => (
-            <div key={u.id} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
+            <div key={u.id} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand/15 font-bold text-brand">
                 {u.username[0].toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-gray-800">{u.username}</p>
+                <p className="truncate font-semibold text-white">{u.username}</p>
                 <div className="flex gap-1.5">
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                    u.rol === 'admin' ? 'bg-brand/15 text-brand' : 'bg-[#22C55E]/15 text-[#22C55E]'
+                    u.rol === 'admin' ? 'bg-brand/15 text-brand' : 'bg-ok/15 text-ok'
                   }`}>
                     {u.rol}
                   </span>
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                    u.activo ? 'bg-[#22C55E]/15 text-[#22C55E]' : 'bg-[#EF4444]/15 text-[#EF4444]'
+                    u.activo ? 'bg-ok/15 text-ok' : 'bg-bad/15 text-bad'
                   }`}>
                     {u.activo ? 'Activo' : 'Inactivo'}
                   </span>
                 </div>
               </div>
-              <button aria-label="Editar" className="rounded-full p-2 active:bg-gray-100" onClick={() => setEditar(u)}>✏️</button>
-              <button aria-label="Eliminar" className="rounded-full p-2 active:bg-gray-100" onClick={() => setAEliminar(u)}>🗑</button>
+              <button aria-label="Editar" className="rounded-full p-2 active:bg-white/10" onClick={() => setEditar(u)}>✏️</button>
+              <button aria-label="Eliminar" className="rounded-full p-2 active:bg-white/10" onClick={() => setAEliminar(u)}>🗑</button>
             </div>
           ))}
         </div>
@@ -90,8 +90,8 @@ export default function Usuarios() {
       )}
 
       <Dialogo abierto={!!aEliminar} titulo={`¿Eliminar a ${aEliminar?.username}?`} onCerrar={() => setAEliminar(null)}>
-        <p className="mb-4 text-sm text-gray-600">Sus cartones quedarán sin vendedor asignado.</p>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        <p className="mb-4 text-sm text-muted">Sus cartones quedarán sin vendedor asignado.</p>
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setAEliminar(null)}>Cancelar</Boton>
           <Boton variante="peligro" className="flex-1" disabled={eliminar.isPending} onClick={() => aEliminar && eliminar.mutate(aEliminar.id)}>
@@ -178,12 +178,12 @@ function DialogoUsuario({ usuario, grupos, onCerrar, onGuardado }: {
           </select>
         </Campo>
         {!esNuevo && (
-          <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-600">
+          <label className="mb-3 flex items-center gap-2 text-sm font-medium text-muted">
             <input type="checkbox" className="h-4 w-4 accent-brand" checked={activo} onChange={(e) => setActivo(e.target.checked)} />
             Usuario activo
           </label>
         )}
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={onCerrar}>Cancelar</Boton>
           <Boton type="submit" className="flex-1" disabled={cargando}>Guardar</Boton>

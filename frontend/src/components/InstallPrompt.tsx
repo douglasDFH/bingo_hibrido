@@ -119,17 +119,17 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-3">
-      <div className="w-full max-w-md rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-black/10">
+      <div className="w-full max-w-md rounded-2xl border border-line bg-surface p-4 shadow-2xl shadow-black/50">
         <div className="flex items-start gap-3">
           <img src="/icons/icon-192.png" alt="" className="h-11 w-11 shrink-0 rounded-xl" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-gray-900">Instalar Bingo Imperial</p>
-            <p className="mt-0.5 text-xs text-gray-500">{textos[modo]}</p>
+            <p className="text-sm font-bold text-white">Instalar Bingo Imperial</p>
+            <p className="mt-0.5 text-xs text-muted">{textos[modo]}</p>
           </div>
           <button
             onClick={cerrar}
             aria-label="Cerrar"
-            className="-mr-1 -mt-1 rounded-full p-1 text-xl leading-none text-gray-400 active:bg-gray-100"
+            className="-mr-1 -mt-1 rounded-full p-1 text-xl leading-none text-muted active:bg-white/10"
           >
             ×
           </button>
@@ -139,13 +139,13 @@ export function InstallPrompt() {
           <div className="mt-3 flex justify-end gap-2">
             <button
               onClick={cerrar}
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-gray-600 active:bg-gray-100"
+              className="rounded-xl px-4 py-2 text-sm font-semibold text-muted active:bg-white/10"
             >
               Ahora no
             </button>
             <button
               onClick={instalar}
-              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-[#04241f] active:bg-brand-dark"
             >
               Instalar
             </button>
@@ -156,7 +156,7 @@ export function InstallPrompt() {
           <div className="mt-3 flex justify-end">
             <button
               onClick={cerrar}
-              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-[#04241f] active:bg-brand-dark"
             >
               Entendido
             </button>
@@ -167,7 +167,7 @@ export function InstallPrompt() {
           <div className="mt-3 flex justify-end">
             <a
               href={intentChrome}
-              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white active:bg-brand/80"
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-[#04241f] active:bg-brand-dark"
             >
               Abrir en Chrome
             </a>

@@ -49,7 +49,7 @@ export default function Banners() {
       ) : (
         <div className="space-y-2.5">
           {banners.map((b) => (
-            <div key={b.id} className="overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div key={b.id} className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm shadow-black/20">
               <img
                 src={`/api/banners/${b.id}/imagen`}
                 alt={b.nombre}
@@ -57,9 +57,9 @@ export default function Banners() {
                 loading="lazy"
               />
               <div className="flex items-center gap-2 p-3">
-                <p className="min-w-0 flex-1 truncate font-semibold text-gray-800">{b.nombre}</p>
-                <button aria-label="Renombrar" className="rounded-full p-2 active:bg-gray-100" onClick={() => { setRenombrar(b); setNombre(b.nombre); setError(''); }}>✏️</button>
-                <button aria-label="Eliminar" className="rounded-full p-2 active:bg-gray-100" onClick={() => setAEliminar(b)}>🗑</button>
+                <p className="min-w-0 flex-1 truncate font-semibold text-white">{b.nombre}</p>
+                <button aria-label="Renombrar" className="rounded-full p-2 active:bg-white/10" onClick={() => { setRenombrar(b); setNombre(b.nombre); setError(''); }}>✏️</button>
+                <button aria-label="Eliminar" className="rounded-full p-2 active:bg-white/10" onClick={() => setAEliminar(b)}>🗑</button>
               </div>
             </div>
           ))}
@@ -82,7 +82,7 @@ export default function Banners() {
         <Campo label="Nombre">
           <input className={inputCls} value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </Campo>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setRenombrar(null)}>Cancelar</Boton>
           <Boton className="flex-1" disabled={mutRenombrar.isPending || !nombre.trim()} onClick={() => mutRenombrar.mutate()}>Guardar</Boton>
@@ -90,8 +90,8 @@ export default function Banners() {
       </Dialogo>
 
       <Dialogo abierto={!!aEliminar} titulo={`¿Eliminar "${aEliminar?.nombre}"?`} onCerrar={() => setAEliminar(null)}>
-        <p className="mb-4 text-sm text-gray-600">Los cartones ya generados con este banner no cambian.</p>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        <p className="mb-4 text-sm text-muted">Los cartones ya generados con este banner no cambian.</p>
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setAEliminar(null)}>Cancelar</Boton>
           <Boton variante="peligro" className="flex-1" disabled={mutEliminar.isPending} onClick={() => aEliminar && mutEliminar.mutate(aEliminar.id)}>Eliminar</Boton>
@@ -149,7 +149,7 @@ function DialogoCrearBanner({ onCerrar, onCreado }: { onCerrar: () => void; onCr
           {imagen ? 'Imagen seleccionada ✓' : 'Elegir imagen (JPG/PNG)'}
         </Boton>
         {preview && <img src={preview} alt="Vista previa" className="mb-3 max-h-32 w-full rounded-xl object-cover" />}
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={onCerrar}>Cancelar</Boton>
           <Boton type="submit" className="flex-1" disabled={cargando}>Crear</Boton>

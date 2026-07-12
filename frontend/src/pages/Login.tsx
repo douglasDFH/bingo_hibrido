@@ -37,17 +37,17 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand to-[#4a42c9] p-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#0d1b2a] to-[#08131d] p-6">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+        className="w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl shadow-black/40"
       >
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-brand text-3xl font-black text-white">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand text-3xl font-black text-[#04241f] shadow-lg shadow-brand/30">
             B
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Bingo Imperial</h1>
-          <p className="text-sm text-gray-500">Inicia sesión para continuar</p>
+          <h1 className="text-2xl font-bold text-white">Bingo Imperial</h1>
+          <p className="text-sm text-muted">Inicia sesión para continuar</p>
         </div>
 
         <Campo label="Usuario">
@@ -69,7 +69,7 @@ export default function Login() {
           />
         </Campo>
 
-        {error && <p className="mb-3 text-sm font-medium text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-3 text-sm font-medium text-bad">{error}</p>}
 
         <Boton type="submit" disabled={cargando} className="w-full">
           {cargando ? 'Entrando…' : 'Entrar'}

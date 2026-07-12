@@ -17,10 +17,10 @@ interface Pdf {
 }
 
 const ESTILO_ESTADO: Record<string, { texto: string; clase: string }> = {
-  procesando: { texto: '● Procesando', clase: 'text-[#16A34A] animate-pulse' },
+  procesando: { texto: '● Procesando', clase: 'text-ok animate-pulse' },
   completado: { texto: '✓ Completado', clase: 'text-brand' },
-  completado_con_errores: { texto: '⚠ Con errores', clase: 'text-[#D97706]' },
-  error: { texto: '✗ Error', clase: 'text-[#DC2626]' },
+  completado_con_errores: { texto: '⚠ Con errores', clase: 'text-warn' },
+  error: { texto: '✗ Error', clase: 'text-bad' },
 };
 
 export default function Pdfs() {
@@ -57,7 +57,7 @@ export default function Pdfs() {
       ) : (
         <div className="space-y-2.5">
           {pdfs.map((p) => {
-            const estilo = ESTILO_ESTADO[p.estado] ?? { texto: p.estado, clase: 'text-gray-500' };
+            const estilo = ESTILO_ESTADO[p.estado] ?? { texto: p.estado, clase: 'text-muted' };
             const conteo =
               p.estado === 'procesando' && p.total_paginas > 0
                 ? `${p.paginas_ok} / ${p.total_paginas} cartones`
@@ -65,20 +65,20 @@ export default function Pdfs() {
             return (
               <div
                 key={p.id}
-                className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm active:bg-gray-50"
+                className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20 active:bg-surface2"
                 onClick={() => navigate('/cartones')}
               >
                 <span className="text-2xl">📄</span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-gray-800">{p.nombre_archivo}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="truncate font-semibold text-white">{p.nombre_archivo}</p>
+                  <p className="text-xs text-muted">
                     {conteo} · {fecha(p.fecha_procesado)}
                   </p>
                   <p className={`text-xs font-semibold ${estilo.clase}`}>{estilo.texto}</p>
                 </div>
                 <button
                   aria-label="Eliminar PDF"
-                  className="rounded-full p-2 text-lg active:bg-gray-100"
+                  className="rounded-full p-2 text-lg active:bg-white/10"
                   onClick={(e) => {
                     e.stopPropagation();
                     setAEliminar(p);
@@ -97,11 +97,11 @@ export default function Pdfs() {
         titulo="¿Eliminar PDF?"
         onCerrar={() => setAEliminar(null)}
       >
-        <p className="mb-4 text-sm text-gray-600">
+        <p className="mb-4 text-sm text-muted">
           Se eliminarán <b>{aEliminar?.nombre_archivo}</b> y sus{' '}
           <b>{aEliminar?.total_cartones ?? 0} cartones</b>.
         </p>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setAEliminar(null)}>
             Cancelar

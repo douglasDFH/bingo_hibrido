@@ -1,15 +1,15 @@
 import { ReactNode, useEffect } from 'react';
 import type { EstadoCarton } from '@bingo/common';
 
-// ── Colores de estado (paridad con la app Android) ───────────
+// ── Colores de estado (paleta navy + teal, estilo App_Atletic) ───
 export const COLOR_ESTADO: Record<string, { texto: string; fondo: string }> = {
-  disponible: { texto: 'text-[#22C55E]', fondo: 'bg-[#22C55E]/15' },
-  vendido: { texto: 'text-[#EF4444]', fondo: 'bg-[#EF4444]/15' },
-  reservado: { texto: 'text-[#F59E0B]', fondo: 'bg-[#F59E0B]/15' },
+  disponible: { texto: 'text-ok', fondo: 'bg-ok/15' },
+  vendido: { texto: 'text-bad', fondo: 'bg-bad/15' },
+  reservado: { texto: 'text-warn', fondo: 'bg-warn/15' },
 };
 
 export function EstadoChip({ estado }: { estado: EstadoCarton | string }) {
-  const c = COLOR_ESTADO[estado] ?? { texto: 'text-gray-500', fondo: 'bg-gray-500/15' };
+  const c = COLOR_ESTADO[estado] ?? { texto: 'text-muted', fondo: 'bg-muted/15' };
   return (
     <span className={`rounded-full px-2 py-0.5 text-xs font-bold uppercase ${c.texto} ${c.fondo}`}>
       {estado}
@@ -41,11 +41,11 @@ export function Boton({
   className?: string;
 }) {
   const estilos = {
-    primario: 'bg-brand text-white active:bg-brand/80',
-    secundario: 'bg-gray-100 text-gray-800 active:bg-gray-200',
-    peligro: 'bg-[#EF4444] text-white active:bg-[#EF4444]/80',
-    verde: 'bg-[#22C55E] text-white active:bg-[#22C55E]/80',
-    ambar: 'bg-[#F59E0B] text-white active:bg-[#F59E0B]/80',
+    primario: 'bg-brand text-[#04241f] active:bg-brand-dark',
+    secundario: 'bg-surface2 text-white active:bg-line',
+    peligro: 'bg-bad text-white active:bg-bad/80',
+    verde: 'bg-ok text-white active:bg-ok/80',
+    ambar: 'bg-warn text-[#3a2600] active:bg-warn/80',
   };
   return (
     <button
@@ -80,14 +80,14 @@ export function Dialogo({
   if (!abierto) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center"
       onClick={onCerrar}
     >
       <div
-        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 sm:rounded-2xl"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-2xl border border-line bg-surface p-5 sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-4 text-lg font-bold text-gray-900">{titulo}</h2>
+        <h2 className="mb-4 text-lg font-bold text-white">{titulo}</h2>
         {children}
       </div>
     </div>
@@ -103,15 +103,15 @@ export function Campo({
 }) {
   return (
     <label className="mb-3 block">
-      <span className="mb-1 block text-sm font-medium text-gray-600">{label}</span>
+      <span className="mb-1 block text-sm font-medium text-muted">{label}</span>
       {children}
     </label>
   );
 }
 
 export const inputCls =
-  'w-full rounded-xl border border-gray-300 px-3 py-2.5 text-base outline-none focus:border-brand focus:ring-2 focus:ring-brand/20';
+  'w-full rounded-xl border border-line bg-surface2 px-3 py-2.5 text-base text-white placeholder:text-hint outline-none focus:border-brand focus:ring-2 focus:ring-brand/25';
 
 export function Vacio({ mensaje }: { mensaje: string }) {
-  return <p className="py-12 text-center text-sm text-gray-400">{mensaje}</p>;
+  return <p className="py-12 text-center text-sm text-muted">{mensaje}</p>;
 }

@@ -101,7 +101,7 @@ export default function Cartones() {
               setParams(p, { replace: true });
             }}
             className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold ${
-              estado === f.valor ? 'bg-brand text-white' : 'bg-white text-gray-600 shadow-sm'
+              estado === f.valor ? 'bg-brand text-[#04241f]' : 'border border-line bg-surface text-muted'
             }`}
           >
             {f.label}
@@ -109,7 +109,7 @@ export default function Cartones() {
         ))}
       </div>
 
-      <p className="mb-2 text-sm text-gray-500">{total} cartones</p>
+      <p className="mb-2 text-sm text-muted">{total} cartones</p>
 
       {isLoading ? (
         <Spinner />
@@ -121,14 +121,14 @@ export default function Cartones() {
             <Link
               key={c.id}
               to={`/cartones/${c.id}`}
-              className="rounded-2xl bg-white p-3 shadow-sm active:bg-gray-50"
+              className="rounded-2xl border border-line bg-surface p-3 shadow-sm shadow-black/20 active:border-brand/50 active:bg-surface2"
             >
               <div className="mb-1 flex items-center justify-between gap-1">
-                <span className="truncate text-lg font-bold text-gray-900">#{c.numero}</span>
+                <span className="truncate text-lg font-bold text-white">#{c.numero}</span>
                 <EstadoChip estado={c.estado} />
               </div>
               {c.comprador && (
-                <p className="truncate text-xs text-gray-500">{c.comprador}</p>
+                <p className="truncate text-xs text-muted">{c.comprador}</p>
               )}
               {c.precio != null && c.precio > 0 && (
                 <p className="text-sm font-semibold text-brand">{dinero(c.precio)}</p>
@@ -147,7 +147,7 @@ export default function Cartones() {
         onCerrar={() => setVerNoDisponible(false)}
       >
         {busquedaGlobal && (
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 text-sm text-muted">
             <p>
               El número <b>{qDebounced}</b> ya está{' '}
               <b>{busquedaGlobal.estado === 'vendido' ? 'vendido' : 'reservado'}</b>.

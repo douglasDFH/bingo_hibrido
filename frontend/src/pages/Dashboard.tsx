@@ -16,16 +16,16 @@ interface DashboardData {
   es_admin: boolean;
 }
 
-function Tarjeta({ valor, label, color = 'text-gray-900', to }: {
+function Tarjeta({ valor, label, color = 'text-white', to }: {
   valor: string | number;
   label: string;
   color?: string;
   to?: string;
 }) {
   const contenido = (
-    <div className="rounded-2xl bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20 active:border-brand/50">
       <p className={`text-2xl font-bold ${color}`}>{valor}</p>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-xs text-muted">{label}</p>
     </div>
   );
   return to ? <Link to={to}>{contenido}</Link> : contenido;
@@ -35,11 +35,11 @@ function BotonMenu({ to, emoji, label }: { to: string; emoji: string; label: str
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm active:bg-gray-50"
+      className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20 active:border-brand/50 active:bg-surface2"
     >
       <span className="text-2xl">{emoji}</span>
-      <span className="font-semibold text-gray-800">{label}</span>
-      <span className="ml-auto text-gray-300">›</span>
+      <span className="font-semibold text-white">{label}</span>
+      <span className="ml-auto text-hint">›</span>
     </Link>
   );
 }
@@ -68,18 +68,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-lg bg-gray-50 pb-10">
-      <header className="bg-brand px-5 pb-8 pt-6 text-white">
+    <div className="mx-auto min-h-screen max-w-lg bg-bg pb-10">
+      <header className="border-b border-line bg-gradient-to-b from-[#183043] to-surface px-5 pb-8 pt-6 text-white">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-xl font-bold">Bienvenido, {user?.username}</h1>
-            <p className="text-sm text-white/80">
+            <p className="text-sm text-brand">
               {esAdmin() ? 'Administrador' : 'Vendedor'}
             </p>
           </div>
           <button
             onClick={() => setConfirmar('logout')}
-            className="rounded-xl bg-white/15 px-3 py-1.5 text-sm active:bg-white/25"
+            className="rounded-xl bg-white/10 px-3 py-1.5 text-sm active:bg-white/20"
           >
             Salir
           </button>
@@ -92,9 +92,9 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-2 gap-3">
             <Tarjeta valor={data.total_cartones} label="Total cartones" to="/cartones" />
-            <Tarjeta valor={data.disponibles} label="Disponibles" color="text-[#22C55E]" to="/cartones?estado=disponible" />
-            <Tarjeta valor={data.vendidos} label="Vendidos" color="text-[#EF4444]" to="/cartones?estado=vendido" />
-            <Tarjeta valor={data.reservados} label="Reservados" color="text-[#F59E0B]" to="/cartones?estado=reservado" />
+            <Tarjeta valor={data.disponibles} label="Disponibles" color="text-ok" to="/cartones?estado=disponible" />
+            <Tarjeta valor={data.vendidos} label="Vendidos" color="text-bad" to="/cartones?estado=vendido" />
+            <Tarjeta valor={data.reservados} label="Reservados" color="text-warn" to="/cartones?estado=reservado" />
             <Tarjeta valor={dinero(data.ingresos)} label="Ingresos" color="text-brand" />
             <Tarjeta valor={data.total_pdfs} label="PDFs" to={tienePermiso('subir_pdf') ? '/pdfs' : undefined} />
           </div>
@@ -119,15 +119,15 @@ export default function Dashboard() {
         </div>
 
         {esAdmin() && (
-          <div className="space-y-2.5 rounded-2xl border border-dashed border-gray-300 p-3">
-            <p className="text-xs font-semibold uppercase text-gray-400">Zona admin</p>
+          <div className="space-y-2.5 rounded-2xl border border-dashed border-line p-3">
+            <p className="text-xs font-semibold uppercase text-muted">Zona admin</p>
             <Boton variante="secundario" className="w-full" onClick={() => setConfirmar('regenerar')}>
               🖼 Regenerar imágenes
             </Boton>
             <Boton variante="peligro" className="w-full" onClick={() => setConfirmar('reset')}>
               🗑 Limpiar BD (cartones y PDFs)
             </Boton>
-            {mensajeAdmin && <p className="text-sm text-gray-600">{mensajeAdmin}</p>}
+            {mensajeAdmin && <p className="text-sm text-muted">{mensajeAdmin}</p>}
           </div>
         )}
       </main>
@@ -159,7 +159,7 @@ export default function Dashboard() {
         titulo="⚠️ Borrar TODOS los cartones y PDFs"
         onCerrar={() => setConfirmar(null)}
       >
-        <p className="mb-4 text-sm text-gray-600">
+        <p className="mb-4 text-sm text-muted">
           Se eliminarán todos los cartones, PDFs y sus imágenes. Usuarios, grupos y
           banners se conservan. Esta acción no se puede deshacer.
         </p>
@@ -178,7 +178,7 @@ export default function Dashboard() {
         titulo="Regenerar imágenes de cartones"
         onCerrar={() => setConfirmar(null)}
       >
-        <p className="mb-4 text-sm text-gray-600">
+        <p className="mb-4 text-sm text-muted">
           Se re-generarán todas las imágenes en segundo plano con el diseño actual.
         </p>
         <div className="flex gap-2">

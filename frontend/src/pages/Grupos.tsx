@@ -52,14 +52,14 @@ export default function Grupos() {
       ) : (
         <div className="space-y-2.5">
           {grupos.map((g) => (
-            <div key={g.id} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
+            <div key={g.id} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20">
               <span className="text-2xl">🏷</span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-gray-800">{g.nombre}</p>
-                <p className="text-xs text-gray-500">{g.total_usuarios} usuarios</p>
+                <p className="truncate font-semibold text-white">{g.nombre}</p>
+                <p className="text-xs text-muted">{g.total_usuarios} usuarios</p>
               </div>
-              <button aria-label="Renombrar" className="rounded-full p-2 active:bg-gray-100" onClick={() => { setEditar(g); setNombre(g.nombre); setError(''); }}>✏️</button>
-              <button aria-label="Eliminar" className="rounded-full p-2 active:bg-gray-100" onClick={() => setAEliminar(g)}>🗑</button>
+              <button aria-label="Renombrar" className="rounded-full p-2 active:bg-white/10" onClick={() => { setEditar(g); setNombre(g.nombre); setError(''); }}>✏️</button>
+              <button aria-label="Eliminar" className="rounded-full p-2 active:bg-white/10" onClick={() => setAEliminar(g)}>🗑</button>
             </div>
           ))}
         </div>
@@ -75,7 +75,7 @@ export default function Grupos() {
         <Campo label="Nombre del grupo">
           <input className={inputCls} value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </Campo>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setEditar(null)}>Cancelar</Boton>
           <Boton className="flex-1" disabled={guardar.isPending || !nombre.trim()} onClick={() => guardar.mutate()}>
@@ -85,8 +85,8 @@ export default function Grupos() {
       </Dialogo>
 
       <Dialogo abierto={!!aEliminar} titulo={`¿Eliminar "${aEliminar?.nombre}"?`} onCerrar={() => setAEliminar(null)}>
-        <p className="mb-4 text-sm text-gray-600">Los usuarios del grupo quedarán sin grupo asignado.</p>
-        {error && <p className="mb-2 text-sm text-[#EF4444]">{error}</p>}
+        <p className="mb-4 text-sm text-muted">Los usuarios del grupo quedarán sin grupo asignado.</p>
+        {error && <p className="mb-2 text-sm text-bad">{error}</p>}
         <div className="flex gap-2">
           <Boton variante="secundario" className="flex-1" onClick={() => setAEliminar(null)}>Cancelar</Boton>
           <Boton variante="peligro" className="flex-1" disabled={eliminar.isPending} onClick={() => aEliminar && eliminar.mutate(aEliminar.id)}>
