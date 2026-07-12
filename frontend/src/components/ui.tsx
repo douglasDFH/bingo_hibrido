@@ -17,6 +17,22 @@ export function EstadoChip({ estado }: { estado: EstadoCarton | string }) {
   );
 }
 
+// Badge sólido de estado, para superponer sobre la imagen del cartón.
+const COLOR_ESTADO_SOLIDO: Record<string, string> = {
+  disponible: 'bg-ok text-[#00110d]',
+  vendido: 'bg-bad text-[#3a0d0b]',
+  reservado: 'bg-warn text-[#3a1f00]',
+};
+
+export function EstadoBadge({ estado }: { estado: EstadoCarton | string }) {
+  const c = COLOR_ESTADO_SOLIDO[estado] ?? 'bg-muted text-[#0d1b2a]';
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase shadow-sm shadow-black/30 ${c}`}>
+      {estado}
+    </span>
+  );
+}
+
 export function Spinner({ className = '' }: { className?: string }) {
   return (
     <div className={`flex justify-center py-8 ${className}`}>

@@ -31,15 +31,15 @@ function Tarjeta({ valor, label, color = 'text-white', to }: {
   return to ? <Link to={to}>{contenido}</Link> : contenido;
 }
 
-function BotonMenu({ to, emoji, label }: { to: string; emoji: string; label: string }) {
+function BotonMenu({ to, label }: { to: string; label: string }) {
   return (
     <Link
       to={to}
       className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 shadow-sm shadow-black/20 active:border-brand/50 active:bg-surface2"
     >
-      <span className="text-2xl">{emoji}</span>
-      <span className="font-semibold text-white">{label}</span>
-      <span className="ml-auto text-hint">›</span>
+      <span className="h-2 w-2 shrink-0 rounded-full bg-brand" />
+      <span className="font-medium text-white">{label}</span>
+      <span className="ml-auto text-lg leading-none text-muted">›</span>
     </Link>
   );
 }
@@ -69,24 +69,23 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto min-h-screen max-w-lg bg-bg pb-10">
-      <header className="border-b border-line bg-gradient-to-b from-[#183043] to-surface px-5 pb-8 pt-6 text-white">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-xl font-bold">Bienvenido, {user?.username}</h1>
-            <p className="text-sm text-brand">
-              {esAdmin() ? 'Administrador' : 'Vendedor'}
-            </p>
-          </div>
+      <header className="border-b border-line bg-surface px-5 pb-5 pt-6">
+        <p className="text-xs font-bold uppercase tracking-wider text-muted">
+          Panel {esAdmin() ? 'Admin' : 'Vendedor'}
+        </p>
+        <div className="mt-1 flex items-center justify-between gap-3">
+          <h1 className="truncate text-xl font-bold text-white">Bienvenido, {user?.username}</h1>
           <button
             onClick={() => setConfirmar('logout')}
-            className="rounded-xl bg-white/10 px-3 py-1.5 text-sm active:bg-white/20"
+            aria-label="Cuenta / cerrar sesión"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-lg font-bold text-[#00110d] active:scale-95"
           >
-            Salir
+            {user?.username?.[0]?.toUpperCase() ?? '?'}
           </button>
         </div>
       </header>
 
-      <main className="-mt-4 space-y-4 px-4">
+      <main className="space-y-5 px-4 pt-4">
         {isLoading || !data ? (
           <Spinner />
         ) : (
@@ -100,22 +99,25 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="space-y-2.5">
-          <BotonMenu to="/cartones" emoji="🔍" label="Ver cartones / Buscar" />
-          {tienePermiso('subir_pdf') && (
-            <>
-              <BotonMenu to="/subir-pdf" emoji="📄" label="Subir PDF" />
-              <BotonMenu to="/pdfs" emoji="🗂" label="Ver PDFs" />
-            </>
-          )}
-          {esAdmin() && (
-            <>
-              <BotonMenu to="/usuarios" emoji="👥" label="Usuarios" />
-              <BotonMenu to="/grupos" emoji="🏷" label="Grupos" />
-              <BotonMenu to="/banners" emoji="🖼" label="Banners" />
-              <BotonMenu to="/permisos" emoji="🔐" label="Permisos" />
-            </>
-          )}
+        <div>
+          <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wider text-muted">Módulos</p>
+          <div className="space-y-2.5">
+            <BotonMenu to="/cartones" label="Ver cartones / Buscar" />
+            {tienePermiso('subir_pdf') && (
+              <>
+                <BotonMenu to="/subir-pdf" label="Subir PDF" />
+                <BotonMenu to="/pdfs" label="Ver PDFs" />
+              </>
+            )}
+            {esAdmin() && (
+              <>
+                <BotonMenu to="/usuarios" label="Usuarios" />
+                <BotonMenu to="/grupos" label="Grupos" />
+                <BotonMenu to="/banners" label="Banners" />
+                <BotonMenu to="/permisos" label="Permisos" />
+              </>
+            )}
+          </div>
         </div>
 
         {esAdmin() && (

@@ -3,7 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { Pantalla } from '../components/Layout';
-import { Dialogo, EstadoChip, Spinner, Vacio, inputCls, Boton } from '../components/ui';
+
+import { Dialogo, EstadoBadge, Spinner, Vacio, Boton } from '../components/ui';
 import { dinero } from '../lib/format';
 
 interface Carton {
@@ -83,7 +84,7 @@ export default function Cartones() {
   return (
     <Pantalla titulo="Cartones">
       <input
-        className={`${inputCls} mb-3`}
+        className="mb-3 w-full rounded-full border border-line bg-surface2 px-4 py-2.5 text-base text-white placeholder:text-hint outline-none focus:border-brand focus:ring-2 focus:ring-brand/25"
         placeholder="Buscar por número, comprador o teléfono…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
@@ -121,18 +122,26 @@ export default function Cartones() {
             <Link
               key={c.id}
               to={`/cartones/${c.id}`}
-              className="rounded-2xl border border-line bg-surface p-3 shadow-sm shadow-black/20 active:border-brand/50 active:bg-surface2"
+              className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm shadow-black/20 transition active:border-brand/60"
             >
-              <div className="mb-1 flex items-center justify-between gap-1">
-                <span className="truncate text-lg font-bold text-white">#{c.numero}</span>
-                <EstadoChip estado={c.estado} />
+              <div className="relative aspect-[4/3] bg-bg">
+                <img
+                  src={`/api/cartones/${c.id}/imagen?v=${c.estado}`}
+                  alt={`Cartón ${c.numero}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-top"
+                />
+                <span className="absolute right-2 top-2">
+                  <EstadoBadge estado={c.estado} />
+                </span>
               </div>
-              {c.comprador && (
-                <p className="truncate text-xs text-muted">{c.comprador}</p>
-              )}
-              {c.precio != null && c.precio > 0 && (
-                <p className="text-sm font-semibold text-brand">{dinero(c.precio)}</p>
-              )}
+              <div className="p-3">
+                <p className="truncate text-lg font-bold text-white">#{c.numero}</p>
+                <p className="truncate text-xs text-muted">
+                  {c.comprador || 'Sin asignar'}
+                  {c.precio != null && c.precio > 0 ? ` · ${dinero(c.precio)}` : ''}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
