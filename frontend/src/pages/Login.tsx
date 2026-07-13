@@ -43,10 +43,12 @@ export default function Login() {
         className="w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl shadow-black/40"
       >
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand text-3xl font-black text-[#04241f] shadow-lg shadow-brand/30">
-            B
-          </div>
-          <h1 className="text-2xl font-bold text-white">Bingo Imperial</h1>
+          <img
+            src="/icons/icon-192.png"
+            alt="Recorte Bingo"
+            className="mx-auto mb-3 h-20 w-20 rounded-2xl shadow-lg shadow-black/40"
+          />
+          <h1 className="text-2xl font-bold text-white">Recorte Bingo</h1>
           <p className="text-sm text-muted">Inicia sesión para continuar</p>
         </div>
 

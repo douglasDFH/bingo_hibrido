@@ -13,11 +13,11 @@ export default defineConfig({
       // prompt de instalación en localhost (por defecto solo se activa en build).
       devOptions: { enabled: true },
       manifest: {
-        name: 'Bingo Imperial',
-        short_name: 'Bingo',
+        name: 'Recorte Bingo',
+        short_name: 'Recorte Bingo',
         description: 'Venta de cartones de bingo',
-        theme_color: '#6C63FF',
-        background_color: '#ffffff',
+        theme_color: '#0D1B2A',
+        background_color: '#0D1B2A',
         display: 'standalone',
         start_url: '/',
         icons: [
